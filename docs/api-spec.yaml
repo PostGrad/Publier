@@ -1,0 +1,34 @@
+openapi: 3.0.3
+info:
+  title: Publier - Creator Publishing Platform API
+  version: 1.0.0
+  description: Public API for scheduling and managing content
+
+servers:
+  - url: https://api.example.com
+
+security:
+  - bearerAuth: []
+
+paths:
+  /v1/posts:
+    post:
+      summary: Create a post
+    get:
+      summary: List posts
+
+  /v1/posts/{id}:
+    get:
+      summary: Get post
+    patch:
+      summary: Update post
+
+  /v1/posts/{id}/schedule:
+    post:
+      summary: Schedule a post
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
