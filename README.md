@@ -91,6 +91,27 @@ Publier is built using:
 
 The system is designed as a modular monolith to keep complexity low while allowing future service separation if needed.
 
+## Platform Guarantees
+
+Publier makes the following guarantees to API consumers:
+
+- Stable API contracts within a major version
+- Clear error semantics
+- Predictable rate limiting behavior
+- Explicit communication of breaking changes
+
+These guarantees are intentional and treated as part of the API design.
+
+## Reliability & Safety
+
+Publier is designed to be safe to integrate with:
+
+- Idempotent write operations
+- Consistent error contracts
+- Request-level traceability
+
+These guarantees are part of the platform’s public contract.
+
 ## What Publier Is Not
 
 - A full publishing UI or dashboard
@@ -107,17 +128,6 @@ Publier is a design-focused project intended to demonstrate platform engineering
 - Webhooks for post lifecycle events
 - Additional SDKs (Python, Ruby)
 - Plugin registration and execution framework
-
-## Platform Guarantees
-
-Publier makes the following guarantees to API consumers:
-
-- Stable API contracts within a major version
-- Clear error semantics
-- Predictable rate limiting behavior
-- Explicit communication of breaking changes
-
-These guarantees are intentional and treated as part of the API design.
 
 ## Author
 
