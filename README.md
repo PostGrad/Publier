@@ -108,6 +108,17 @@ Publier is a design-focused project intended to demonstrate platform engineering
 - Additional SDKs (Python, Ruby)
 - Plugin registration and execution framework
 
+## Platform Guarantees
+
+Publier makes the following guarantees to API consumers:
+
+- Stable API contracts within a major version
+- Clear error semantics
+- Predictable rate limiting behavior
+- Explicit communication of breaking changes
+
+These guarantees are intentional and treated as part of the API design.
+
 ## Author
 
 Built by Pranay Patel as a platform-focused backend engineering project.
