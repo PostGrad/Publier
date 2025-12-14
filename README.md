@@ -91,6 +91,10 @@ Publier is built using:
 
 The system is designed as a modular monolith to keep complexity low while allowing future service separation if needed.
 
+## Development
+
+Publier targets Node.js 22. Use `nvm use` to ensure the correct runtime version.
+
 ## Platform Guarantees
 
 Publier makes the following guarantees to API consumers:

@@ -1,0 +1,33 @@
+{
+  "name": "publier",
+  "version": "1.0.0",
+  "description": "public, developer-first API for creating, scheduling, and managing content programmatically",
+  "main": "server.ts",
+  "scripts": {
+    "start": "ts-node src/server.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "api",
+    "content",
+    "publishing",
+    "scheduling",
+    "management",
+    "developer-first"
+  ],
+  "author": "Pranay Patel",
+  "license": "ISC",
+  "packageManager": "pnpm@10.25.0",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.0.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
