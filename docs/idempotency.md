@@ -11,6 +11,14 @@ Publier supports idempotent requests for write operations to protect against dup
 
 Clients may send an `Idempotency-Key` header with a unique value. If the same request is received again with the same key, the original response is returned without re-processing the request.
 
+## Storage
+
+Idempotency keys and responses are stored in Redis with a short TTL to balance safety and memory usage.
+
+## Failure Handling
+
+Idempotency is enforced on a best-effort basis. If Redis is unavailable, requests proceed normally to avoid blocking writes.
+
 ## Rationale
 
 Idempotency is critical for:

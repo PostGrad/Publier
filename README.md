@@ -1,7 +1,7 @@
 # Publier
 
 Publier is a public, developer-first API for creating, scheduling, and managing content programmatically.
-It is designed as a platform — not a product — that third-party developers can build on top of.
+It is designed as a platform - not a product, that third-party developers can build on top of.
 
 ---
 
@@ -14,11 +14,11 @@ The project is intentionally small in scope but deep in design, focusing on API 
 
 ## Design Principles
 
-- **Public API first** – Every feature is designed from the perspective of an external developer.
-- **Stability over novelty** – No breaking changes within a version.
-- **Explicit over implicit** – Clear endpoints, predictable behavior, and consistent error responses.
-- **Boring technology, thoughtful design** – Proven tools used deliberately.
-- **Extensible by default** – Designed to support future integrations and plugins.
+- **Developer first API** - Every feature is designed from the perspective of an external developer.
+- **Stability over novelty** - No breaking changes within a version.
+- **Explicit over implicit** - Clear endpoints, predictable behavior, and consistent error responses.
+- **Boring technology, thoughtful design** - Proven tools used deliberately.
+- **Extensible by default** - Designed to support future integrations and plugins.
 
 ## Core Capabilities
 
@@ -35,14 +35,14 @@ All endpoints are versioned under `/v1`.
 
 ### Resources
 
-- `/v1/apps` – Developer applications and API keys
-- `/v1/posts` – Content creation and management
-- `/v1/posts/{id}/schedule` – Scheduling posts
-- `/v1/posts/{id}/analytics` – Basic engagement metrics
+- `/v1/apps` - Developer applications and API keys
+- `/v1/posts` - Content creation and management
+- `/v1/posts/{id}/schedule` - Scheduling posts
+- `/v1/posts/{id}/analytics` - Basic engagement metrics
 
-## Authentication
+### Authentication
 
-Publier uses API key–based authentication. API keys are issued per developer application and sent via the `Authorization` header:
+Publier uses API key-based authentication. API keys are issued per developer application and sent via the `Authorization` header:
 
 `Authorization: Bearer key_live_xyz`
 
@@ -52,7 +52,11 @@ Each key has scoped permissions such as:
 - `posts:write`
 - `analytics:read`
 
-## Error Handling
+### Idempotent Requests
+
+Publier supports idempotent write operations using the `Idempotency-Key` header to protect against duplicate submissions.
+
+### Error Handling
 
 Errors are designed to be both human-readable and machine-parseable. Publier uses a consistent error format across all endpoints:
 
@@ -66,7 +70,7 @@ Errors are designed to be both human-readable and machine-parseable. Publier use
 }
 ```
 
-## Versioning & Stability
+### Versioning & Stability
 
 - All APIs are versioned (`/v1`)
 - No breaking changes within a version

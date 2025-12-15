@@ -1,12 +1,14 @@
 import { Router, Request, Response } from "express";
 import { authenticate } from "../middleware/auth";
 import { ApiError } from "../errors/ApiError";
+import { idempotency } from "../middleware/idempotency";
 
 export const postsRouter = Router();
 
 postsRouter.post(
   "/",
   authenticate("posts:write"),
+  idempotency,
   (req: Request, res: Response) => {
     const { content, scheduled_at } = req.body || {};
     if (!content) {
