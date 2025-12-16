@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import { authenticate } from "../middleware/auth";
 import { ApiError } from "../errors/ApiError";
 import { idempotency } from "../middleware/idempotency";
+import { createPost } from "../repositories/postsRepository";
 
 export const postsRouter = Router();
 
@@ -9,7 +10,7 @@ postsRouter.post(
   "/",
   authenticate("posts:write"),
   idempotency,
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     const { content, scheduled_at } = req.body || {};
     if (!content) {
       throw new ApiError(400, "INVALID_REQUEST", "content is required");
@@ -23,11 +24,16 @@ postsRouter.post(
       );
     }
 
-    return res.status(201).json({
-      id: "post_123",
-      status: scheduled_at ? "scheduled" : "draft",
+    const post = await createPost({
       content,
-      scheduled_at: scheduled_at || null,
+      scheduledAt: scheduled_at,
+    });
+
+    return res.status(201).json({
+      id: post.id,
+      status: post.status,
+      content: post.content,
+      scheduled_at: post.scheduled_at || null,
     });
   }
 );
