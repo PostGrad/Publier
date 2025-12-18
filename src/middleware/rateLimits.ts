@@ -7,7 +7,7 @@ const MAX_REQUESTS = 100;
 
 export async function rateLimit(
   req: Request,
-  _res: Response,
+  res: Response,
   next: NextFunction
 ) {
   const apiKey = req.headers.authorization;
@@ -27,7 +27,14 @@ export async function rateLimit(
       await redis.expire(key, WINDOW_SECONDS);
     }
 
+    res.setHeader("X-RateLimit-Limit", MAX_REQUESTS.toString());
+    res.setHeader(
+      "X-RateLimit-Remaining",
+      Math.max(0, MAX_REQUESTS - count).toString()
+    );
+
     if (count > MAX_REQUESTS) {
+      res.setHeader("Retry-After", WINDOW_SECONDS.toString());
       return next(
         new ApiError(
           429,

@@ -8,6 +8,11 @@ Publier enforces rate limits to protect platform stability and ensure fair usage
 - Default limit: 100 requests per minute
 - Burst traffic is allowed within a short window
 
+## Behavior
+
+- Limits apply across all endpoints
+- Burst traffic beyond the limit is rejected
+
 ## Headers
 
 Responses include standard rate limit headers:
@@ -18,7 +23,7 @@ Responses include standard rate limit headers:
 
 ## Error Response
 
-When a limit is exceeded, the API returns:
+When a limit is exceeded, the API returns HTTP 429 with structured error payload:
 
 ```json
 {
@@ -28,3 +33,9 @@ When a limit is exceeded, the API returns:
   }
 }
 ```
+
+## Future Considerations
+
+- Tiered plans
+- Per-endpoint limits
+- Dynamic quotas
