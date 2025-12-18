@@ -4,7 +4,7 @@
   "description": "public, developer-first API for creating, scheduling, and managing content programmatically",
   "main": "server.ts",
   "scripts": {
-    "start": "ts-node src/server.ts",
+    "start": "NODE_ENV=development tsx watch src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -31,6 +31,7 @@
     "@types/node": "^25.0.2",
     "@types/pg": "^8.16.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
 }

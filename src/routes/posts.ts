@@ -5,6 +5,7 @@ import { idempotency } from "../middleware/idempotency";
 import { createPost } from "../repositories/postsRepository";
 import { asyncHandler } from "../utils/asyncHandler";
 import { listPosts } from "../repositories/listPostsRepository";
+import { getPostById } from "../repositories/getPostRepository";
 
 export const postsRouter = Router();
 
@@ -157,6 +158,36 @@ postsRouter.get(
         next_cursor: nextCursor,
         has_next_page: hasNextPage,
       },
+    });
+  })
+);
+
+postsRouter.get(
+  "/:id",
+  authenticate("posts:read"),
+  asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    // UUID v4 format validation
+    const uuidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+    if (!uuidRegex.test(id)) {
+      throw new ApiError(400, "INVALID_REQUEST", "id must be a valid UUID");
+    }
+
+    const post = await getPostById(id);
+
+    if (!post) {
+      throw new ApiError(404, "NOT_FOUND", "Post not found");
+    }
+
+    return res.json({
+      id: post.id,
+      status: post.status,
+      content: post.content,
+      scheduled_at: post.scheduled_at || null,
+      created_at: post.created_at,
     });
   })
 );
