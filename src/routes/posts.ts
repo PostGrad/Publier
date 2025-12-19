@@ -2,12 +2,15 @@ import { Router, Request, Response } from "express";
 import { authenticate } from "../middleware/auth";
 import { ApiError } from "../errors/ApiError";
 import { idempotency } from "../middleware/idempotency";
-import { createPost } from "../repositories/postsRepository";
+import {
+  createPost,
+  getPostById,
+  listPosts,
+  updatePost,
+  schedulePost,
+} from "../repositories/postsRepository";
 import { asyncHandler } from "../utils/asyncHandler";
-import { listPosts } from "../repositories/listPostsRepository";
-import { getPostById } from "../repositories/getPostRepository";
 import { uuidValidation } from "../utils/regexValidations";
-import { updatePost } from "../repositories/updatePostRepository";
 
 export const postsRouter = Router();
 
@@ -222,6 +225,80 @@ postsRouter.patch(
       content: updatedPost.content,
       scheduled_at: updatedPost.scheduled_at || null,
       created_at: updatedPost.created_at,
+    });
+  })
+);
+
+postsRouter.post(
+  "/:id/schedule",
+  authenticate("posts:write"),
+  asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    if (!uuidValidation(id)) {
+      throw new ApiError(400, "INVALID_REQUEST", "id must be a valid UUID");
+    }
+
+    const { scheduled_at } = req.body || {};
+
+    // Validate scheduled_at is provided
+    if (scheduled_at === undefined || scheduled_at === null) {
+      throw new ApiError(400, "INVALID_REQUEST", "scheduled_at is required");
+    }
+
+    // Validate scheduled_at is a string
+    if (typeof scheduled_at !== "string") {
+      throw new ApiError(
+        400,
+        "INVALID_REQUEST",
+        "scheduled_at must be an ISO 8601 timestamp string"
+      );
+    }
+
+    // Validate scheduled_at is a valid date
+    const scheduledDate = new Date(scheduled_at);
+    if (isNaN(scheduledDate.getTime())) {
+      throw new ApiError(
+        400,
+        "INVALID_REQUEST",
+        "scheduled_at must be a valid ISO 8601 timestamp"
+      );
+    }
+
+    // Validate scheduled_at is in the future
+    if (scheduledDate <= new Date()) {
+      throw new ApiError(
+        400,
+        "INVALID_REQUEST",
+        "scheduled_at must be in the future"
+      );
+    }
+
+    const post = await schedulePost(id, scheduled_at);
+
+    // Post not found OR not in draft status
+    if (!post) {
+      // We need to check if post exists to give the right error
+      const existingPost = await getPostById(id);
+
+      if (!existingPost) {
+        throw new ApiError(404, "NOT_FOUND", "Post not found");
+      }
+
+      // Post exists but is not a draft
+      throw new ApiError(
+        409,
+        "CONFLICT",
+        `Cannot schedule post with status '${existingPost.status}'. Only draft posts can be scheduled.`
+      );
+    }
+
+    return res.json({
+      id: post.id,
+      status: post.status,
+      content: post.content,
+      scheduled_at: post.scheduled_at,
+      created_at: post.created_at,
     });
   })
 );
