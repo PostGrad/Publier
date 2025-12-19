@@ -6,6 +6,8 @@ import { createPost } from "../repositories/postsRepository";
 import { asyncHandler } from "../utils/asyncHandler";
 import { listPosts } from "../repositories/listPostsRepository";
 import { getPostById } from "../repositories/getPostRepository";
+import { uuidValidation } from "../utils/regexValidations";
+import { updatePost } from "../repositories/updatePostRepository";
 
 export const postsRouter = Router();
 
@@ -74,7 +76,6 @@ postsRouter.get(
     const rawOrder = req.query.order;
     const rawCursor = req.query.cursor;
 
-    // limit
     let limit = 20;
     if (rawLimit !== undefined) {
       const parsed = Number(rawLimit);
@@ -88,7 +89,6 @@ postsRouter.get(
       limit = Math.min(parsed, 100);
     }
 
-    // status
     let status: string | undefined;
     const allowedStatuses = ["draft", "scheduled", "published", "failed"];
 
@@ -103,7 +103,6 @@ postsRouter.get(
       status = String(rawStatus);
     }
 
-    // order
     let order: "asc" | "desc" = "desc";
     if (rawOrder !== undefined) {
       if (rawOrder !== "asc" && rawOrder !== "desc") {
@@ -116,7 +115,6 @@ postsRouter.get(
       order = rawOrder;
     }
 
-    // cursor
     let cursor: string | undefined;
     if (rawCursor !== undefined) {
       if (typeof rawCursor !== "string") {
@@ -168,11 +166,7 @@ postsRouter.get(
   asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    // UUID v4 format validation
-    const uuidRegex =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-    if (!uuidRegex.test(id)) {
+    if (!uuidValidation(id)) {
       throw new ApiError(400, "INVALID_REQUEST", "id must be a valid UUID");
     }
 
@@ -188,6 +182,46 @@ postsRouter.get(
       content: post.content,
       scheduled_at: post.scheduled_at || null,
       created_at: post.created_at,
+    });
+  })
+);
+
+postsRouter.patch(
+  "/:id",
+  authenticate("posts:write"),
+  asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    if (!uuidValidation(id)) {
+      throw new ApiError(400, "INVALID_REQUEST", "id must be a valid UUID");
+    }
+
+    const { content } = req.body || {};
+
+    if (content === undefined) {
+      throw new ApiError(400, "INVALID_REQUEST", "Content field is required");
+    }
+
+    if (content !== undefined && typeof content !== "string") {
+      throw new ApiError(400, "INVALID_REQUEST", "content must be a string");
+    }
+
+    if (content !== undefined && content.trim() === "") {
+      throw new ApiError(400, "INVALID_REQUEST", "content cannot be empty");
+    }
+
+    const updatedPost = await updatePost(id, content);
+
+    if (!updatePost) {
+      throw new ApiError(404, "NOT_FOUND", "Post not found");
+    }
+
+    return res.json({
+      id: updatedPost.id,
+      status: updatedPost.status,
+      content: updatedPost.content,
+      scheduled_at: updatedPost.scheduled_at || null,
+      created_at: updatedPost.created_at,
     });
   })
 );
