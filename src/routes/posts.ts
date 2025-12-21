@@ -302,3 +302,53 @@ postsRouter.post(
     });
   })
 );
+
+postsRouter.get(
+  "/:id/analytics",
+  authenticate("analytics:read"),
+  asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    if (!uuidValidation(id)) {
+      throw new ApiError(400, "INVALID_REQUEST", "id must be a valid UUID");
+    }
+
+    const post = await getPostById(id);
+
+    if (!post) {
+      throw new ApiError(404, "NOT_FOUND", "Post not found");
+    }
+
+    // Analytics are only available for published posts
+    if (post.status !== "published") {
+      return res.json({
+        post_id: id,
+        status: post.status,
+        message: "Analytics are available only for published posts",
+        impressions: null,
+        engagements: null,
+        engagement_rate: null,
+      });
+    }
+
+    // Mocked analytics data
+    const impressions = Math.floor(Math.random() * 10000) + 100;
+    const engagements = Math.floor(Math.random() * impressions * 0.1);
+    const engagementRate =
+      impressions > 0
+        ? Number(((engagements / impressions) * 100).toFixed(2))
+        : 0;
+
+    return res.json({
+      post_id: id,
+      status: post.status,
+      impressions,
+      engagements,
+      engagement_rate: engagementRate,
+      _meta: {
+        source: "mocked",
+        generated_at: new Date().toISOString(),
+      },
+    });
+  })
+);

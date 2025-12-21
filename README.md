@@ -40,6 +40,10 @@ All endpoints are versioned under `/v1`.
 - `/v1/posts/{id}/schedule` - Scheduling posts
 - `/v1/posts/{id}/analytics` - Basic engagement metrics
 
+### System
+
+- `/v1/health` – Readiness check for infrastructure (no auth required)
+
 ### Authentication
 
 Publier uses API key-based authentication. API keys are issued per developer application and sent via the `Authorization` header:

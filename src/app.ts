@@ -4,6 +4,7 @@ import { requestId } from "./middleware/requestId";
 import { errorHandler } from "./middleware/errorHandler";
 import { postsRouter } from "./routes/posts";
 import { rateLimit } from "./middleware/rateLimits";
+import { healthRouter } from "./routes/health";
 
 export const app = express();
 
@@ -20,6 +21,8 @@ app.use((req, res, next) => {
 });
 
 app.use(rateLimit);
+
+app.use("/v1/health", healthRouter);
 
 app.use("/v1/posts", postsRouter);
 
