@@ -66,6 +66,8 @@ postsRouter.post(
       status: post.status,
       content: post.content,
       scheduled_at: post.scheduled_at || null,
+      created_at: post.created_at,
+      updated_at: post.updated_at,
     });
   })
 );
@@ -185,6 +187,7 @@ postsRouter.get(
       content: post.content,
       scheduled_at: post.scheduled_at || null,
       created_at: post.created_at,
+      updated_at: post.updated_at,
     });
   })
 );
@@ -225,6 +228,7 @@ postsRouter.patch(
       content: updatedPost.content,
       scheduled_at: updatedPost.scheduled_at || null,
       created_at: updatedPost.created_at,
+      updated_at: updatedPost.updated_at,
     });
   })
 );
@@ -299,6 +303,7 @@ postsRouter.post(
       content: post.content,
       scheduled_at: post.scheduled_at,
       created_at: post.created_at,
+      updated_at: post.updated_at,
     });
   })
 );
