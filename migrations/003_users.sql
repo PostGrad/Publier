@@ -34,8 +34,7 @@ CREATE TABLE user_sessions (
 );
 
 -- Fast lookup by token hash for auth middleware
-CREATE INDEX idx_sessions_token ON user_sessions(token_hash)
-    WHERE expires_at > now();
+CREATE INDEX idx_sessions_token ON user_sessions(token_hash);
 
 -- List sessions by user
 CREATE INDEX idx_sessions_user ON user_sessions(user_id);

@@ -8,6 +8,15 @@ export function errorHandler(
   _next: NextFunction
 ) {
   const requestId = req.headers["x-request-id"];
+
+  // Log all errors during development
+  console.error("─── Error ───────────────────────────────────────");
+  console.error("Request ID:", requestId);
+  console.error("Path:", req.method, req.originalUrl);
+  console.error("Error:", err.message);
+  console.error("Stack:", err.stack);
+  console.error("─────────────────────────────────────────────────");
+
   if (err instanceof ApiError) {
     return res.status(err.statusCode).json({
       error: {
