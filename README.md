@@ -48,7 +48,7 @@ All endpoints are versioned under `/v1`.
 
 Publier uses API key-based authentication. API keys are issued per developer application and sent via the `Authorization` header:
 
-`Authorization: Bearer key_live_xyz`
+`Authorization: Bearer pub_live_xyz`
 
 Each key has scoped permissions such as:
 

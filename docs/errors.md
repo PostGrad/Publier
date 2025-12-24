@@ -16,14 +16,15 @@ Publier uses a consistent error response format across all endpoints. Errors are
 
 ## Error Codes
 
-| Code                | Description                  |
-| ------------------- | ---------------------------- |
-| UNAUTHORIZED        | Missing or invalid API key   |
-| FORBIDDEN           | Insufficient permissions     |
-| INVALID_REQUEST     | Validation or semantic error |
-| NOT_FOUND           | Resource does not exist      |
-| RATE_LIMIT_EXCEEDED | Too many requests            |
-| INTERNAL_ERROR      | Unexpected server error      |
+| Code                | Description                                   |
+| ------------------- | --------------------------------------------- |
+| UNAUTHORIZED        | Missing or invalid API key                    |
+| FORBIDDEN           | Insufficient permissions                      |
+| INVALID_REQUEST     | Validation or semantic error                  |
+| NOT_FOUND           | Resource does not exist                       |
+| CONFLICT            | Request conflicts with current resource state |
+| RATE_LIMIT_EXCEEDED | Too many requests                             |
+| INTERNAL_ERROR      | Unexpected server error                       |
 
 ## Design Principles
 

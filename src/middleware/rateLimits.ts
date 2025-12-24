@@ -38,7 +38,7 @@ export async function rateLimit(
       return next(
         new ApiError(
           429,
-          "RATE_LIMITED",
+          "RATE_LIMIT_EXCEEDED",
           "Too many requests. Please retry later."
         )
       );

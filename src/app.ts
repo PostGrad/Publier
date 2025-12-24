@@ -7,6 +7,7 @@ import { rateLimit } from "./middleware/rateLimits";
 import { healthRouter } from "./routes/health";
 import { authRouter } from "./routes/auth";
 import { appsRouter } from "./routes/apps";
+import { apiKeysRouter } from "./routes/apiKeys";
 
 export const app = express();
 
@@ -29,6 +30,8 @@ app.use("/v1/health", healthRouter);
 app.use("/v1/auth", authRouter);
 
 app.use("/v1/apps", appsRouter);
+
+app.use("/v1/apps/:appId/keys", apiKeysRouter);
 
 app.use("/v1/posts", postsRouter);
 

@@ -236,6 +236,7 @@ postsRouter.patch(
 postsRouter.post(
   "/:id/schedule",
   authenticate("posts:write"),
+  idempotency,
   asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 

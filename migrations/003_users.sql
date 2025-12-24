@@ -1,7 +1,3 @@
--- ============================================================
--- Users (Developers who use Publier's API)
--- ============================================================
-
 CREATE TABLE users (
     id UUID PRIMARY KEY,
     email TEXT NOT NULL UNIQUE,
@@ -18,10 +14,6 @@ CREATE TRIGGER users_updated_at
     BEFORE UPDATE ON users
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
-
--- ============================================================
--- User Sessions
--- ============================================================
 
 CREATE TABLE user_sessions (
     id UUID PRIMARY KEY,

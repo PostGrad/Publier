@@ -1,6 +1,3 @@
--- ============================================================
--- Apps (Developer Applications)
--- ============================================================
 -- Each app represents an integration built on Publier.
 -- Apps own API keys and provide isolation for:
 -- - Rate limits
