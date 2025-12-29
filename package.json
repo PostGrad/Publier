@@ -4,8 +4,10 @@
   "description": "public, developer-first API for creating, scheduling, and managing content programmatically",
   "main": "server.ts",
   "scripts": {
-    "start": "NODE_ENV=development tsx watch src/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node src/server.ts",
+    "test": "dotenv -e .env.test -- vitest run",
+    "test:watch": "dotenv -e .env.test -- vitest",
+    "test:coverage": "dotenv -e .env.test -- vitest run --coverage"
   },
   "keywords": [
     "api",
@@ -31,8 +33,12 @@
     "@types/express": "^5.0.6",
     "@types/node": "^25.0.2",
     "@types/pg": "^8.16.0",
+    "@types/supertest": "^6.0.3",
+    "dotenv-cli": "^11.0.0",
+    "supertest": "^7.1.4",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.16"
   }
 }
