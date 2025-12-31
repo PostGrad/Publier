@@ -8,7 +8,10 @@ export default defineConfig({
     // Global test timeout (10 seconds)
     testTimeout: 10000,
 
-    // Run tests sequentially (important for DB tests)
+    // Run test FILES sequentially (critical for shared database)
+    fileParallelism: false,
+
+    // Run tests within files sequentially
     sequence: {
       concurrent: false,
     },
