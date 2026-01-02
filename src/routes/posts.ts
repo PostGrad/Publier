@@ -9,6 +9,7 @@ import {
   updatePost,
   schedulePost,
 } from "../repositories/postsRepository";
+import { dispatchWebhookEvent } from "../services/webhookService";
 import { asyncHandler } from "../utils/asyncHandler";
 import { uuidValidation } from "../utils/regexValidations";
 
@@ -60,6 +61,15 @@ postsRouter.post(
       content,
       scheduledAt: scheduled_at,
     });
+
+    // Dispatch webhook event (fire-and-forget)
+    if ((req as any).apiKey) {
+      dispatchWebhookEvent(
+        (req as any).apiKey.appId,
+        post.status === "scheduled" ? "post.scheduled" : "post.created",
+        { post_id: post.id, status: post.status }
+      ).catch(() => {}); // Ignore errors, don't break request
+    }
 
     return res.status(201).json({
       id: post.id,
@@ -298,6 +308,14 @@ postsRouter.post(
       );
     }
 
+    // Dispatch webhook event
+    if ((req as any).apiKey) {
+      dispatchWebhookEvent((req as any).apiKey.appId, "post.scheduled", {
+        post_id: post.id,
+        status: post.status,
+        scheduled_at: post.scheduled_at,
+      }).catch(() => {});
+    }
     return res.json({
       id: post.id,
       status: post.status,
