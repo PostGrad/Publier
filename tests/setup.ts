@@ -26,6 +26,13 @@ afterAll(async () => {
 
 beforeEach(async () => {
   // Clean up tables before each test (order matters for foreign keys)
+  // Webhook deliveries must be deleted before webhooks (FK constraint)
+  await pool.query("DELETE FROM webhook_deliveries").catch(() => {
+    // Ignore if table doesn't exist (migration not run yet)
+  });
+  await pool.query("DELETE FROM webhooks").catch(() => {
+    // Ignore if table doesn't exist (migration not run yet)
+  });
   await pool.query("DELETE FROM api_keys");
   await pool.query("DELETE FROM apps");
   await pool.query("DELETE FROM user_sessions");
