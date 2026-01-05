@@ -30,7 +30,6 @@ export interface WebhookDelivery {
   status: "pending" | "success" | "failed";
   attempts: number;
   last_attempt_at: string | null;
-  last_error: string | null;
   created_at: string;
 }
 
@@ -185,11 +184,10 @@ export async function updateDeliveryStatus(
     UPDATE webhook_deliveries
     SET status = $1,
         attempts = attempts + 1,
-        last_attempt_at = now(),
-        last_error = $2
-    WHERE id = $3
+        last_attempt_at = now()
+    WHERE id = $2
     `,
-    [status, error || null, id]
+    [status, id]
   );
 }
 
