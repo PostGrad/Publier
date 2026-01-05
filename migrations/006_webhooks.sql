@@ -22,7 +22,7 @@ CREATE INDEX idx_webhooks_app ON webhooks(app_id);
 CREATE TRIGGER webhooks_updated_at
     BEFORE UPDATE ON webhooks
     FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at();
+    EXECUTE FUNCTION update_updated_at_column();
 
 -- Webhook deliveries table: tracks delivery attempts
 
