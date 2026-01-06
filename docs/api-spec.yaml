@@ -150,6 +150,66 @@ paths:
         "401":
           $ref: "#/components/responses/Unauthorized"
 
+  /v1/auth/verify-email:
+    get:
+      tags: [Auth]
+      summary: Verify email address
+      description: Verifies the user's email address using a token sent via email.
+      operationId: verifyEmail
+      parameters:
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Email verification token (evt_...)
+      responses:
+        "200":
+          description: Email verified successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email verified successfully
+                  user_id:
+                    type: string
+                    format: uuid
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /v1/auth/resend-verification:
+    post:
+      tags: [Auth]
+      summary: Resend verification email
+      description: Sends a new verification email to the authenticated user.
+      operationId: resendVerificationEmail
+      security:
+        - sessionAuth: []
+      responses:
+        "200":
+          description: Verification email sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Verification email sent successfully
+        "400":
+          description: Email already verified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
   /v1/apps:
     post:
       tags: [Apps]
@@ -754,10 +814,14 @@ components:
         email:
           type: string
           format: email
+        email_verified:
+          type: boolean
+          description: Whether the email address has been verified
         email_verified_at:
           type: string
           format: date-time
           nullable: true
+          description: Timestamp when email was verified
         name:
           type: string
           nullable: true
