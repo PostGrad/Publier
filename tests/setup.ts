@@ -33,6 +33,9 @@ beforeEach(async () => {
   await pool.query("DELETE FROM webhooks").catch(() => {
     // Ignore if table doesn't exist (migration not run yet)
   });
+  await pool.query("DELETE FROM email_verification_tokens").catch(() => {
+    // Ignore if table doesn't exist (migration not run yet)
+  });
   await pool.query("DELETE FROM api_keys");
   await pool.query("DELETE FROM apps");
   await pool.query("DELETE FROM user_sessions");

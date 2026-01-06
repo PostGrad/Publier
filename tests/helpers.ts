@@ -28,6 +28,7 @@ export const testPassword = "securepass123";
 interface TestUser {
   id: string;
   email: string;
+  password: string;
   sessionToken: string;
 }
 
@@ -60,6 +61,7 @@ export async function createTestUser(
   return {
     id: registerRes.body.id,
     email,
+    password: testPassword,
     sessionToken: loginRes.body.token,
   };
 }
