@@ -11,6 +11,14 @@ import {
   deleteSession,
   findUserById,
 } from "../repositories/usersRepository";
+import {
+  createVerificationToken,
+  verifyEmailWithToken,
+} from "../repositories/emailVerificationRepository";
+import {
+  emailService,
+  createVerificationEmail,
+} from "../services/emailService";
 
 export const authRouter = Router();
 
@@ -58,11 +66,21 @@ authRouter.post(
       name: name || undefined,
     });
 
+    // Generate verification token and send email
+    const token = await createVerificationToken(user.id);
+    const baseUrl = process.env.BASE_URL || "http://localhost:3000";
+    const verificationEmail = createVerificationEmail(email, token, baseUrl);
+
+    await emailService.sendEmail(verificationEmail);
+
     return res.status(201).json({
       id: user.id,
       email: user.email,
       name: user.name,
+      email_verified: false,
       created_at: user.created_at,
+      _message:
+        "Account created successfully. Please check your email to verify your account.",
     });
   })
 );
@@ -158,10 +176,77 @@ authRouter.get(
     return res.json({
       id: user.id,
       email: user.email,
+      email_verified: user.email_verified,
       email_verified_at: user.email_verified_at,
       name: user.name,
       created_at: user.created_at,
       updated_at: user.updated_at,
+    });
+  })
+);
+
+/*
+ * Verify email address using a token
+ */
+authRouter.get(
+  "/verify-email",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { token } = req.query;
+
+    if (!token || typeof token !== "string") {
+      throw new ApiError(400, "INVALID_REQUEST", "token is required");
+    }
+
+    const userId = await verifyEmailWithToken(token);
+
+    if (!userId) {
+      throw new ApiError(
+        400,
+        "INVALID_REQUEST",
+        "Invalid or expired verification token"
+      );
+    }
+
+    return res.json({
+      message: "Email verified successfully",
+      user_id: userId,
+    });
+  })
+);
+
+/*
+ * Resend verification email
+ * Requires authentication
+ */
+authRouter.post(
+  "/resend-verification",
+  sessionAuth,
+  asyncHandler(async (req: Request, res: Response) => {
+    const { id } = (req as any).user;
+
+    const user = await findUserById(id);
+
+    if (!user) {
+      throw new ApiError(404, "NOT_FOUND", "User not found");
+    }
+
+    if (user.email_verified) {
+      throw new ApiError(400, "INVALID_REQUEST", "Email already verified");
+    }
+
+    // Generate new token and send email
+    const token = await createVerificationToken(user.id);
+    const baseUrl = process.env.BASE_URL || "http://localhost:3000";
+    const verificationEmail = createVerificationEmail(
+      user.email,
+      token,
+      baseUrl
+    );
+
+    await emailService.sendEmail(verificationEmail);
+
+    return res.json({
+      message: "Verification email sent successfully",
     });
   })
 );

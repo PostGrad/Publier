@@ -5,6 +5,7 @@ import * as argon2 from "argon2";
 export interface User {
   id: string;
   email: string;
+  email_verified: boolean;
   email_verified_at: string | null;
   name: string | null;
   created_at: string;
@@ -63,7 +64,7 @@ export async function createUser({
     `
     INSERT INTO users (id, email, password_hash, name)
     VALUES ($1, $2, $3, $4)
-    RETURNING id, email, email_verified_at, name, created_at, updated_at
+    RETURNING id, email, email_verified, email_verified_at, name, created_at, updated_at
     `,
     [id, email.toLowerCase(), passwordHash, name || null]
   );
@@ -88,7 +89,7 @@ export async function findUserByEmail(email: string): Promise<{
 export async function findUserById(id: string): Promise<User | null> {
   const result = await pool.query(
     `
-    SELECT id, email, email_verified_at, name, created_at, updated_at
+    SELECT id, email, email_verified, email_verified_at, name, created_at, updated_at
     FROM users WHERE id = $1
     `,
     [id]
