@@ -137,9 +137,33 @@ Publier is a design-focused project intended to demonstrate platform engineering
 
 - OAuth 2.0 for delegated user access
 - GraphQL API alongside REST
-- Webhooks for post lifecycle events
 - Additional SDKs (Python, Ruby)
 - Plugin registration and execution framework
+- Enhanced monitoring and observability
+- Production deployment guides
+
+## Testing
+
+This project includes comprehensive **integration tests** with **81%+ code coverage**:
+
+```bash
+# Run all tests
+pnpm test
+
+# Run tests in watch mode
+pnpm test:watch
+
+# Run tests with coverage report
+pnpm test:coverage
+```
+
+**Coverage Metrics:**
+- Lines: 81%
+- Functions: 87%
+- Branches: 68%
+- Statements: 81%
+
+See [Testing Documentation](docs/testing.md) for details on our testing strategy and philosophy.
 
 ## Author
 
