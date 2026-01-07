@@ -22,12 +22,23 @@ export default defineConfig({
     // Include test files
     include: ["tests/**/*.test.ts"],
 
-    // Coverage (optional but impressive)
+    // Coverage configuration
     coverage: {
       provider: "v8",
-      reporter: ["text", "html"],
+      reporter: ["text", "html", "json", "json-summary"],
       include: ["src/**/*.ts"],
-      exclude: ["src/server.ts"],
+      exclude: [
+        "src/server.ts", // Server startup file (not unit-testable)
+        "src/app.ts", // App assembly (tested via integration tests)
+        "src/infra/**", // External infrastructure connections
+      ],
+      // Coverage thresholds (enforce minimum coverage)
+      thresholds: {
+        lines: 80,
+        functions: 85,
+        branches: 65, // Slightly lower - edge cases are harder to test
+        statements: 80,
+      },
     },
   },
 });
